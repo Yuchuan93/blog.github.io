@@ -301,9 +301,93 @@
         
           
         
+          
+        
       
     
     
+      
+        
+          <div class='post-wrapper'>
+            <article class="post white-box shadow reveal ">
+  
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h2 class="title">
+    <a href="/blog.github.io/2020/07/05/ProjectorShadowDissolve/">
+      实现一个可以溶解的平面投影阴影
+    </a>
+  </h2>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a href="/blog.github.io/source/about/" rel="nofollow">
+    <img src="/blog.github.io/image/head.jpg">
+    <p>Yuchuan</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：Jul 5, 2020</p>
+  </a>
+</div>
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+  <section class="article typo">
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>​    最近项目项目上用到了平面投影阴影，原理是用一个单独的pass将模型顶点投影到一个平面上，这种方式有着不错的效率，但是也只能用在比较平的地面上，我们的项目刚好适用，而且还能跟随模型实现溶解的效果，一举两得。</p>
+<h3 id="先来看看怎么实现阴影"><a href="#先来看看怎么实现阴影" class="headerlink" title="先来看看怎么实现阴影"></a>先来看看怎么实现阴影</h3><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>​    实现投影阴影其实就是计算每一个顶点沿着光线方向与投影平面的交点坐标，然后将该点以黑色渲染出来，想象一下将这个模型沿着光线方向一巴掌拍扁在平面上，就是这个意思。我们可以用相似三角形原理来求它，如下图：</p>
+      
+    </div>
+    
+      
+        <div class="button readmore">
+          <a href="/blog.github.io/2020/07/05/ProjectorShadowDissolve/">
+            阅读全文 <i class="fas fa-chevron-right"></i>
+          </a>
+        </div>
+      
+    
+  </section>
+</article>
+
+          </div>
+        
       
         
           <div class='post-wrapper'>
@@ -393,6 +477,59 @@
     <!-- 根据主题中的设置决定是否在archive中针对摘要部分的MathJax公式加载mathjax.js文件 -->
     
     
+      <script>
+  // https://github.com/theme-next/hexo-theme-next/blob/master/layout/_third-party/math/mathjax.swig
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.0/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    // 文章章节标题不能为 “MathJax” ，否则会报错。
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 
@@ -429,6 +566,22 @@
   
     
     
+  
+
+  <section class="widget tagcloud shadow desktop mobile">
+    
+  <header>
+    
+      <a href='/blog/tags/'><i class="fas fa-tags fa-fw" aria-hidden="true"></i><span class='name'>热门标签</span></a>
+    
+  </header>
+
+
+    <div class='content'>
+      <a href="/blog.github.io/tags/shader/" style="font-size: 14px; color: #999">shader</a>
+    </div>
+  </section>
+
 
   
 
