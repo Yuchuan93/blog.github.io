@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>在URP下渲染透明物体到深度纹理 | Rich One</title><meta name="keywords" content="URP"><meta name="author" content="Rich One"><meta name="copyright" content="Rich One"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="深度纹理在Unity的URP管线环境下，我们可以在管线设置中打开深度纹理直接供我们使用，相较于默认管线更为方便。这个深度纹理一般会用到后处理效果上，比如Unity内置的景深效果。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在URP下渲染透明物体到深度纹理">
+<meta property="og:url" content="https://yuchuan93.github.io/2021/04/03/TransparentDepth/index.html">
+<meta property="og:site_name" content="Rich One">
+<meta property="og:description" content="深度纹理在Unity的URP管线环境下，我们可以在管线设置中打开深度纹理直接供我们使用，相较于默认管线更为方便。这个深度纹理一般会用到后处理效果上，比如Unity内置的景深效果。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg">
+<meta property="article:published_time" content="2021-04-03T14:50:18.000Z">
+<meta property="article:modified_time" content="2021-05-13T14:45:44.743Z">
+<meta property="article:author" content="Rich One">
+<meta property="article:tag" content="URP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg"><link rel="shortcut icon" href="/blog/img/favicon.png"><link rel="canonical" href="https://yuchuan93.github.io/2021/04/03/TransparentDepth/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/blog/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/blog/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '在URP下渲染透明物体到深度纹理',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-05-13 22:45:44'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/blog/image/head.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">3</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">2</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 全都在这</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 大概都有些啥</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分门别类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/blog/">Rich One</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/blog/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/blog/archives/"><i class="fa-fw fas fa-archive"></i><span> 全都在这</span></a></div><div class="menus_item"><a class="site-page" href="/blog/tags/"><i class="fa-fw fas fa-tags"></i><span> 大概都有些啥</span></a></div><div class="menus_item"><a class="site-page" href="/blog/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分门别类</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">在URP下渲染透明物体到深度纹理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-04-03T14:50:18.000Z" title="发表于 2021-04-03 22:50:18">2021-04-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-05-13T14:45:44.743Z" title="更新于 2021-05-13 22:45:44">2021-05-13</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="在URP下渲染透明物体到深度纹理"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="深度纹理"><a href="#深度纹理" class="headerlink" title="深度纹理"></a>深度纹理</h2><p>在Unity的URP管线环境下，我们可以在管线设置中打开深度纹理直接供我们使用，相较于默认管线更为方便。这个深度纹理一般会用到后处理效果上，比如Unity内置的景深效果。</p>
+<span id="more"></span>
+<h2 id="URP的深度纹理实现"><a href="#URP的深度纹理实现" class="headerlink" title="URP的深度纹理实现"></a>URP的深度纹理实现</h2><p>Unity会根据情况，用两种不同的方式来实现深度纹理，一个是CopyDepth，一个是DepthPrepass。</p>
+<h4 id="CopyDepth"><a href="#CopyDepth" class="headerlink" title="CopyDepth"></a>CopyDepth</h4><p>CopyDepth是在执行完非透明物体时会从深度缓冲中复制一份出来，可以很明显的判断出，这个深度是不包含透明物体的，因为渲染队列排在透明物体的前面，但是就算将队列放到透明物体后面，也不能保证透明物体在渲染的时候就一定会写入深度，通常情况下透明物体一般都不会写入深度。</p>
+<h4 id="DepthPrepass"><a href="#DepthPrepass" class="headerlink" title="DepthPrepass"></a>DepthPrepass</h4><p>在某些情况下，比如开启了抗锯齿，Unity则会使用DepthPrepass的方式来渲染深度纹理，这个方式会提前将场景中物体的深度渲染一遍，使用的是物体本身Shader中PassTag为DepthOnly的pass。但是透明物体也还是被排除在外，我们通过源码看到，只有渲染队列为Opaque的物体会参与计算。</p>
+<p><img src=".\DepthPrepass.png" alt=""></p>
+<center>图1-1</center>
+
+
+
+<p>下图是一个实例场景，三个cube，使用的shader是Lit，红色的是透明的，其他的是非透明的，红色和蓝色是距离摄像机位置相同，绿色的距离稍远，然后添加了景深后处理效果。</p>
+<p><img src=".\1.png" alt=""></p>
+<center>图1-2</center>
+
+<p>可以看到，红色由于是透明物体，并没有正确的景深效果。我们打开FrameDebug，发现无论是CopyDepth还是DepthPrepass，都没有渲染透明物体。</p>
+<p><img src=".\2.png" alt=""></p>
+<center>图1-3</center>
+
+<p><img src=".\3.png" alt=""></p>
+<center>图1-4</center>
+
+
+
+<h2 id="渲染透明物体的深度"><a href="#渲染透明物体的深度" class="headerlink" title="渲染透明物体的深度"></a>渲染透明物体的深度</h2><p>如果我们使用CopyDepth的方式来渲染透明深度就需要打开透明物体的深度写入，将深度写入到深度缓冲，然后将CopyDepth的队列放到透明物体后。但是这样的话会存在一个问题，就是不能保证透明物体的渲染正确。所以我这里选择用DepthOnly的方式来实现。</p>
+<h4 id="修改DepthOnlyPass的队列设置"><a href="#修改DepthOnlyPass的队列设置" class="headerlink" title="修改DepthOnlyPass的队列设置"></a>修改DepthOnlyPass的队列设置</h4><p>根据图1-1可以看到，在构造DepthPrepass时传入了一个RenderQueueRange类型，进入这个类可以发现，其实有三个选项可以选，Opaque、Transparent和All。</p>
+<p><img src=".\3-1.png" alt=""></p>
+<center>图2-1</center>
+
+<p>直接修改为all试一下。</p>
+<p><img src=".\3-2.png" alt=""></p>
+<center>图2-2</center>
+
+<p><img src=".\3-3.png" alt=""></p>
+<center>图2-3</center>
+
+<p>深度写入成功了，景深效果也正常了。当然这样直接修改是不行的，所以接下来就是用一个更灵活、破坏性更小的方式来实现了。我们可以自己实现一个和DepthOnlyPass功能一样的RenderFeature来渲染一次深度，但是我觉得这样也不好，因为URP的实现里，无论我们是否打开深度纹理，我们使用的后处理需要用到深度纹理的话，Unity都会使用CopyDepth和DepthPrepass其中一个进行渲染，我们不能将这两个渲染操作全部关闭，也就相当于如果使用自定义的RenderFeature的话会多出一次渲染深度的操作。所以我使用了另一种方式，就是修改了DepthPrepass初始化的方式，通过设置来决定是否渲染透明物体的深度。</p>
+<p>首先找到RenderObjects类，在RenderQueueType这个枚举中添加All字段，后面就直接用这个枚举了，当然也可以自己定义一个，不过放在这里可以在后面将RenderObjects这个RenderFeature一并扩展了。</p>
+<p><img src=".\3-4.png" alt=""></p>
+<center>图2-4</center>
+
+<p>然后为DepthOnlyPass添加一个新的构造方法。</p>
+<p><img src=".\3-5.png" alt=""></p>
+<center>图2-5</center>
+
+<p>然后找到UniversalRenderPipelineAsset类，再到General settings的部分添加这个设置，并添加访问函数，同时在编辑器类中也添加对应代码。</p>
+<p><img src=".\3-6.png" alt=""></p>
+<p><img src=".\3-7.png" alt=""></p>
+<p><img src=".\3-9.png" alt=""></p>
+<p>这时，就可以看到管线资源中的变化了。</p>
+<p><img src=".\3-10.png" alt=""></p>
+<p>接下来我们修改DepthOnlyPass初始化的地方，这样就算是基本准备好了。</p>
+<p><img src=".\3-8.png" alt=""></p>
+<p>当然这里只是实现了最基本的修改，前面也说到过DepthPrepass的开启是需要一定条件的，比如开启抗锯齿。这里其实可以添加一个判断，如果开启了透明物体的渲染，就开启DepthPrepass这个选项，我这里就直接开启抗锯齿看效果了。</p>
+<p><img src=".\3-13.png" alt=""></p>
+<p><img src=".\3-14.png" alt=""></p>
+<p><img src=".\3-15.png" alt=""></p>
+<p>由于深度纹理多数都用于后处理效果，除了后处理，一些需要用到深度信息的效果，比如描边、水面等也都会用到，所以透明物体的深度基本是必需的。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Rich One</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://yuchuan93.github.io/2021/04/03/TransparentDepth/">https://yuchuan93.github.io/2021/04/03/TransparentDepth/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://yuchuan93.github.io" target="_blank">Rich One</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/blog/tags/URP/">URP</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/blog/2020/07/05/ProjectorShadowDissolve/"><img class="next-cover" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="onerror=null;src='/blog/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">实现一个可以溶解的平面投影阴影</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/blog/image/head.jpg" onerror="this.onerror=null;this.src='/blog/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">Rich One</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/blog/archives/"><div class="headline">文章</div><div class="length-num">3</div></a></div><div class="card-info-data-item is-center"><a href="/blog/tags/"><div class="headline">标签</div><div class="length-num">2</div></a></div></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%B1%E5%BA%A6%E7%BA%B9%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">深度纹理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#URP%E7%9A%84%E6%B7%B1%E5%BA%A6%E7%BA%B9%E7%90%86%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.</span> <span class="toc-text">URP的深度纹理实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CopyDepth"><span class="toc-number">2.0.1.</span> <span class="toc-text">CopyDepth</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DepthPrepass"><span class="toc-number">2.0.2.</span> <span class="toc-text">DepthPrepass</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E9%80%8F%E6%98%8E%E7%89%A9%E4%BD%93%E7%9A%84%E6%B7%B1%E5%BA%A6"><span class="toc-number">3.</span> <span class="toc-text">渲染透明物体的深度</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9DepthOnlyPass%E7%9A%84%E9%98%9F%E5%88%97%E8%AE%BE%E7%BD%AE"><span class="toc-number">3.0.1.</span> <span class="toc-text">修改DepthOnlyPass的队列设置</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/blog/2021/04/03/TransparentDepth/" title="在URP下渲染透明物体到深度纹理"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="在URP下渲染透明物体到深度纹理"/></a><div class="content"><a class="title" href="/blog/2021/04/03/TransparentDepth/" title="在URP下渲染透明物体到深度纹理">在URP下渲染透明物体到深度纹理</a><time datetime="2021-04-03T14:50:18.000Z" title="发表于 2021-04-03 22:50:18">2021-04-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2020/07/05/ProjectorShadowDissolve/" title="实现一个可以溶解的平面投影阴影"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="实现一个可以溶解的平面投影阴影"/></a><div class="content"><a class="title" href="/blog/2020/07/05/ProjectorShadowDissolve/" title="实现一个可以溶解的平面投影阴影">实现一个可以溶解的平面投影阴影</a><time datetime="2020-07-05T13:45:01.000Z" title="发表于 2020-07-05 21:45:01">2020-07-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/blog/2020/06/12/MyFirstBlog/" title="开始吧"><img src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/img/default.jpg" onerror="this.onerror=null;this.src='/blog/img/404.jpg'" alt="开始吧"/></a><div class="content"><a class="title" href="/blog/2020/06/12/MyFirstBlog/" title="开始吧">开始吧</a><time datetime="2020-06-12T15:22:20.000Z" title="发表于 2020-06-12 23:22:20">2020-06-12</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Rich One</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/blog/js/utils.js"></script><script src="/blog/js/main.js"></script><div class="js-pjax"></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
